@@ -1,11 +1,18 @@
+const popupId = "uk-ipa-popup";
+
+document.addEventListener('mousedown', (event) => {
+  const existing = document.getElementById(popupId);
+  if (existing && !existing.contains(event.target)) existing.remove();
+});
+
 document.addEventListener('mouseup', () => {
   const selection = window.getSelection();
   if (!selection || selection.rangeCount === 0) return;
 
   const selectedText = selection.toString().trim();
   if (!selectedText) return;
+  if (/\s/.test(selectedText)) return;
 
-  const popupId = "uk-ipa-popup";
   const existing = document.getElementById(popupId);
   if (existing) existing.remove();
 
