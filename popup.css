@@ -1,0 +1,12 @@
+#uk-ipa-popup {
+  position: absolute;
+  background: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-family: sans-serif;
+  font-size: 16px;
+  color: #000000;
+  z-index: 999999;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
