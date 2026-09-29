@@ -1,0 +1,60 @@
+# Push a tag like v1.2.0 (matching package.json's version) to build, upload and submit to the Chrome Web Store.
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  chrome:
+    runs-on: ubuntu-latest
+    env:
+      # Public build settings: Settings → Secrets and variables → Actions → Variables.
+      # Leave WXT_REQUIRE_LICENSE unset to publish the free version.
+      WXT_REQUIRE_LICENSE: ${{ vars.WXT_REQUIRE_LICENSE }}
+      WXT_LICENSE_API_URL: ${{ vars.WXT_LICENSE_API_URL }}
+      WXT_PAYMENT_LINK_URL: ${{ vars.WXT_PAYMENT_LINK_URL }}
+      WXT_PRODUCT_ID: ${{ vars.WXT_PRODUCT_ID || 'uk-ipa' }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Check tag matches package.json version
+        run: |
+          VERSION="v$(node -p "require('./package.json').version")"
+          if [ "$VERSION" != "$GITHUB_REF_NAME" ]; then
+            echo "::error::Tag $GITHUB_REF_NAME does not match package.json version $VERSION"
+            exit 1
+          fi
+
+      - name: Check paid-build variables are set
+        if: env.WXT_REQUIRE_LICENSE == 'true'
+        run: |
+          for v in WXT_LICENSE_API_URL WXT_PAYMENT_LINK_URL; do
+            if [ -z "${!v}" ]; then echo "::error::Repository variable $v is not set"; exit 1; fi
+          done
+
+      - run: npm ci
+      - run: npm run compile
+      - run: npm test
+      - run: npm run zip
+
+      - name: Submit to Chrome Web Store
+        run: npx wxt submit --chrome-zip .output/uk-ipa-${GITHUB_REF_NAME#v}-chrome.zip
+        env:
+          CHROME_API_VERSION: v2
+          CHROME_EXTENSION_ID: ${{ secrets.CHROME_EXTENSION_ID }}
+          CHROME_PUBLISHER_ID: ${{ secrets.CHROME_PUBLISHER_ID }}
+          CHROME_SERVICE_ACCOUNT_CLIENT_EMAIL: ${{ secrets.CHROME_SERVICE_ACCOUNT_CLIENT_EMAIL }}
+          CHROME_SERVICE_ACCOUNT_PRIVATE_KEY: ${{ secrets.CHROME_SERVICE_ACCOUNT_PRIVATE_KEY }}
+
+      - name: Create GitHub release
+        run: gh release create "$GITHUB_REF_NAME" .output/*-chrome.zip --generate-notes
+        env:
+          GH_TOKEN: ${{ github.token }}

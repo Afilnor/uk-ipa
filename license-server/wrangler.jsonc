@@ -1,0 +1,31 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "uk-ipa-license-server",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-09-01",
+  "observability": { "enabled": true },
+  // Uncomment once your domain is on Cloudflare, and set WXT_LICENSE_API_URL to match:
+  // "routes": [{ "pattern": "licenses.example.com", "custom_domain": true }],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "licenses",
+      // From `npx wrangler d1 create licenses`.
+      "database_id": "00000000-0000-0000-0000-000000000000",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "ratelimits": [
+    // Per client IP: /verify is called about once a day per install, /recover rarely.
+    { "name": "VERIFY_LIMITER", "namespace_id": "1001", "simple": { "limit": 30, "period": 60 } },
+    { "name": "RECOVER_LIMITER", "namespace_id": "1002", "simple": { "limit": 3, "period": 60 } }
+  ],
+  "vars": {
+    "EMAIL_FROM": "UK IPA <licenses@example.com>",
+    // product_id -> display name and the Stripe Payment Link ID (plink_...) that sells it.
+    "PRODUCTS": {
+      "uk-ipa": { "name": "UK IPA", "payment_link": "plink_REPLACE_ME" }
+    }
+  }
+  // Secrets (`npx wrangler secret put <NAME>`, or .dev.vars locally): STRIPE_WEBHOOK_SECRET, RESEND_API_KEY
+}

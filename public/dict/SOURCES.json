@@ -1,0 +1,26 @@
+{
+  "generatedAt": "2026-09-29T07:33:28.459Z",
+  "license": "GPL-3.0-or-later (see THIRD_PARTY_NOTICES.md)",
+  "counts": {
+    "wiktionary": 82199,
+    "ipaDictOnly": 33355,
+    "overlap": 31764,
+    "total": 115554
+  },
+  "sources": [
+    {
+      "name": "Wiktionary (via kaikki.org / Wiktextract)",
+      "url": "https://kaikki.org/dictionary/English/kaikki.org-dictionary-English.jsonl.gz",
+      "version": "Fri, 25 Sep 2026 10:03:09 GMT",
+      "license": "CC BY-SA 4.0",
+      "priority": 1
+    },
+    {
+      "name": "ipa-dict en_UK (derived from ipacards)",
+      "url": "https://raw.githubusercontent.com/open-dict-data/ipa-dict/43c3570eb3553bdd19fccd2bd0091534889af023/data/en_UK.txt",
+      "version": "43c3570eb3553bdd19fccd2bd0091534889af023",
+      "license": "GPL-3.0",
+      "priority": 2
+    }
+  ]
+}

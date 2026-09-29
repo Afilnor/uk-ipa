@@ -1,0 +1,33 @@
+# Rebuilds public/dict/en_UK.json from Wiktionary + ipa-dict and opens a pull request with the changes.
+# Needs: Settings → Actions → General → "Allow GitHub Actions to create and approve pull requests".
+name: Refresh dataset
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 6 1 * *' # monthly
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+      # The script uses only Node built-ins, so no npm install is needed.
+      - run: node scripts/refresh-dataset.ts
+      - uses: peter-evans/create-pull-request@v8
+        with:
+          branch: chore/refresh-dataset
+          commit-message: 'chore: refresh pronunciation dataset'
+          title: 'Refresh pronunciation dataset'
+          body: |
+            Automated refresh of `public/dict/en_UK.json` from Wiktionary (kaikki.org) and ipa-dict.
+            See the workflow run summary for word counts. Spot-check a few words before merging.
+          add-paths: public/dict/
+          delete-branch: true

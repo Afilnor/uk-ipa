@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UK IPA</title>
+  </head>
+  <body>
+    <h1>UK IPA</h1>
+    <p id="status" class="muted">Checking your license…</p>
+
+    <section id="free" hidden>
+      <p>Highlight any word on a page to see its British pronunciation.</p>
+      <p id="free-note" class="muted"></p>
+    </section>
+
+    <section id="locked" hidden>
+      <p>Highlight any word to see its British pronunciation. Unlock it once, forever.</p>
+      <button id="buy" type="button" class="primary">Buy for $1</button>
+
+      <form id="activate-form">
+        <label for="key">Already bought it? Enter your license key:</label>
+        <input id="key" name="key" autocomplete="off" spellcheck="false" placeholder="UKIPA-XXXX-XXXX-XXXX-XXXX" required />
+        <button type="submit">Activate</button>
+      </form>
+
+      <details>
+        <summary>Lost your key?</summary>
+        <form id="recover-form">
+          <label for="email">The email you paid with:</label>
+          <input id="email" name="email" type="email" autocomplete="email" required />
+          <button type="submit">Email me my key</button>
+        </form>
+      </details>
+    </section>
+
+    <section id="unlocked" hidden>
+      <p>Unlocked. Highlight any word on a page to see its UK IPA.</p>
+      <p class="muted">License: <code id="current-key"></code></p>
+      <button id="deactivate" type="button">Remove license from this browser</button>
+    </section>
+
+    <p id="message" role="status"></p>
+    <p class="muted small">Pronunciations from <a href="https://en.wiktionary.org/" target="_blank" rel="noopener">Wiktionary</a> and <a href="https://github.com/open-dict-data/ipa-dict" target="_blank" rel="noopener">ipa-dict</a>.</p>
+
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

@@ -1,0 +1,10 @@
+node_modules/
+.output/
+.wxt/
+.env
+.env.*
+.dataset-cache/
+license-server/.wrangler/
+license-server/node_modules/
+!.env.example
+CLAUDE.local.md

@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+jobs:
+  extension:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run compile
+      - run: npm test
+      - run: npm run zip
+      - run: npm run zip:firefox
+      - uses: actions/upload-artifact@v7
+        with:
+          name: extension-zips
+          path: .output/*.zip
+
+  license-server:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: license-server
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: license-server/package-lock.json
+      - run: npm ci
+      - run: npm run compile
+      - run: npm test

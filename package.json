@@ -1,0 +1,27 @@
+{
+  "name": "uk-ipa",
+  "description": "Show the UK IPA pronunciation of any highlighted word.",
+  "version": "1.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wxt",
+    "dev:firefox": "wxt -b firefox",
+    "build": "wxt build",
+    "build:firefox": "wxt build -b firefox",
+    "zip": "wxt zip",
+    "zip:firefox": "wxt zip -b firefox",
+    "compile": "tsc --noEmit",
+    "test": "node --test",
+    "refresh-dataset": "node scripts/refresh-dataset.ts",
+    "postinstall": "wxt prepare"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.3",
+    "typescript": "^5.9.3",
+    "wxt": "^0.21.4"
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true
+  }
+}
