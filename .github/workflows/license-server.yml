@@ -11,9 +11,6 @@ concurrency: license-server-deploy
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: license-server
     env:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
@@ -36,4 +33,5 @@ jobs:
           cache: npm
           cache-dependency-path: license-server/package-lock.json
       - if: steps.configured.outputs.ok == 'true'
+        working-directory: license-server
         run: npm ci && npm test && npm run deploy
